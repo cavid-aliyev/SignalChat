@@ -4,7 +4,17 @@ import { Input, Button, Text } from "react-native-elements";
 import { auth } from "../firebase";
 
 const RegisterPage = ({ navigation }) => {
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState("");
 
+  // just before screen paints stuff works (assigned navigation)
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Login",
+    });
+  }, [navigation]);
 
   const register = () => {
     auth
@@ -19,18 +29,6 @@ const RegisterPage = ({ navigation }) => {
       })
       .catch((error) => alert(error.message));
   };
-
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [imageUrl, setImageUrl] = React.useState("");
-
-  // just before screen paints stuff works (assigned navigation)
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerBackTitle: "Login",
-    });
-  }, [navigation]);
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
