@@ -2,10 +2,8 @@ import "react-native-gesture-handler";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import LoginPage from "./pages/LoginPage";
 import { createStackNavigator } from "@react-navigation/stack";
-import RegisterPage from "./pages/RegisterPage";
-import HomePage from "./pages/HomePage";
+import { HomePage, RegisterPage, LoginPage, AddChat } from "./pages";
 
 const Stack = createStackNavigator();
 
@@ -18,10 +16,13 @@ const globalScreenOptions = {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={globalScreenOptions}>
+      <Stack.Navigator
+        screenOptions={globalScreenOptions}
+      >
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="AddChat" component={AddChat} />
       </Stack.Navigator>
     </NavigationContainer>
   );
