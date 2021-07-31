@@ -1,10 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { Input, Button, Image } from "react-native-elements";
+import { auth } from "../firebase";
 
-const LoginPage = ({navigation}) => {
+const LoginPage = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  React.useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   const signIn = () => {};
 
@@ -36,7 +47,12 @@ const LoginPage = ({navigation}) => {
       </View>
 
       <Button containerStyle={styles.button} onPress={signIn} title="Login" />
-      <Button onPress={() => navigation.navigate("Register")} containerStyle={styles.button} type="outline" title="Register" />
+      <Button
+        onPress={() => navigation.navigate("Register")}
+        containerStyle={styles.button}
+        type="outline"
+        title="Register"
+      />
       <View style={{ height: 100 }} />
     </KeyboardAvoidingView>
   );
@@ -53,10 +69,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   inputContainer: {
-      width: 300,
+    width: 300,
   },
   button: {
-      width: 200,
-      marginTop: 10,
+    width: 200,
+    marginTop: 10,
   },
 });
