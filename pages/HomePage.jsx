@@ -9,10 +9,25 @@ import {
 import CustomListItem from "../components/CustomListItem";
 import { Avatar } from "react-native-elements";
 import { auth, db } from "../firebase";
-import {AntDesign, SimpleLineIcons} from '@expo/vector-icons'
-
+import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 
 const HomePage = ({ navigation }) => {
+  //show all chats
+  const [chats, setChats] = React.useState([]);
+
+  React.useEffect(() => {
+    const unsubscribe = db.collection("chats").onSnapshot((snapshot) =>
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
+    );
+
+    return unsubscribe;
+  }, []);
+
   const signOutUser = () => {
     auth.signOut().then(() => {
       navigation.replace("Login");
@@ -33,22 +48,36 @@ const HomePage = ({ navigation }) => {
         </View>
       ),
       headerRight: () => (
-         <View style={styles.rightNavbar}>
-              <TouchableOpacity activeOpacity={0.5}>
-                  <AntDesign name="camerao" size={24} color="black"/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("AddChat")} activeOpacity={0.5}>
-                  <SimpleLineIcons name="pencil" size={24} color="black"/>
-              </TouchableOpacity>
-         </View>
-      )
+        <View style={styles.rightNavbar}>
+          <TouchableOpacity activeOpacity={0.5}>
+            <AntDesign name="camerao" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddChat")}
+            activeOpacity={0.5}
+          >
+            <SimpleLineIcons name="pencil" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation]);
 
+
+  const enterChat = (id, chatName) => {
+    //possible to send props navi
+    navigation.navigate("Chat", {
+      id: id,
+      chatName: chatName
+    })
+  }
+
   return (
     <SafeAreaView>
-      <ScrollView>
-        <CustomListItem />
+      <ScrollView style={styles.container}>
+        {chats.map(({ id, data: { chatName } }) => (
+          <CustomListItem key={id} id={id} chatName={chatName} enterChat={enterChat} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -57,10 +86,13 @@ const HomePage = ({ navigation }) => {
 export default HomePage;
 
 const styles = StyleSheet.create({
-  rightNavbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  rightNavbar: { 
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: 80,
-    marginRight: 20
-  }
+    marginRight: 20,
+  },
+  container: {
+    height: "100%",
+  },
 });
