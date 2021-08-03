@@ -15,12 +15,16 @@ const AddChat = ({ navigation }) => {
   }, [navigation]);
 
   const createChat = async () => {
-    await db.collection('chats').add({
-      chatName: input
-    }).then(() => {
-      navigation.goBack()
-    }).catch((error) => alert(error))
-  }
+    await db
+      .collection("chats")
+      .add({
+        chatName: input,
+      })
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((error) => alert(error));
+  };
 
   return (
     <View style={styles.container}>
@@ -33,7 +37,7 @@ const AddChat = ({ navigation }) => {
         }
         onSubmitEditing={createChat}
       />
-      <Button onPress={createChat} title="Create new Chat"/>
+      <Button disabled={!input} onPress={createChat} title="Create new Chat" />
     </View>
   );
 };
@@ -44,6 +48,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     padding: 30,
-    height: "100%"
+    height: "100%",
   },
 });
